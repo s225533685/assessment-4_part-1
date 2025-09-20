@@ -104,5 +104,17 @@ boxplot(northeast$Circumf_2005_cm, northeast$Circumf_2020_cm,
         main = "Tree Circumference at Start and End by Site")
         
 ```
+Step 9: Calculate the mean growth over the last 10 years at each site.
+```{r}
+# calculate growth data from 2010 to 2020
+northeast_growth_data_2010_2020 <- (northeast$Circumf_2020_cm - northeast$Circumf_2010_cm)
+northeast_growth_data_2010_2020
+Southwest_growth_data_2010_2020 <- (southwest$Circumf_2020_cm - southwest$Circumf_2010_cm)
+Southwest_growth_data_2010_2020
+North_east_mean_growth_data <- mean(northeast_growth_data_2010_2020)
+North_east_mean_growth_data
+Southwest_mean_growth_data <-mean(Southwest_growth_data_2010_2020)
+Southwest_mean_growth_data
+```
 
 
