@@ -35,7 +35,7 @@ Step 3: List the 10 genes with the highest mean expression
 Firstly, the meanexpression in gene_data were ordered in the descending order using order function and then it was saved in gene_data_sorted file. After that, first 10 rows containing 10 genes with highest meanexpression were displayed in gene_data_sorted using a drop argument to ensure the datas are obtained in table format and not in vector format. 
 
 ```{r}
-#Step 5: Listing 10 genes with the higest mean expression
+#Step 3: Listing 10 genes with the higest mean expression
 # order the "meanexpression" of the gene-data in descending order and save in gene_data-sorted file
 gene_data_sorted <- gene_data[order(-gene_data$meanexpression), ] # order(-gene_data$meanofcolumns) sorts the meanexpression in descending order
 # show 10 genes with the highest mea expression values 
@@ -58,4 +58,51 @@ hist(gene_data$meanexpression, # data to be plotted
      xlab="mean expression", # label for the x-axis 
      main="mean value of gene expression") # Main title of the histogram 
 ```
+Step 6: Import this csv file into an R object. What are the column names?
+The csv raw file for growth data was downloaded using download.file function and was saved as growth_data. The column names were checked using the colnames functions. The column names for this file are site, TreeID,  Circumf_2005_cm, Circumf_2010_cm, Circumf_2015_cm, and Circumf_2020_cm. 
+```{r}
+# download the growth data file
+download.file("https://raw.githubusercontent.com/ghazkha/Assessment4/refs/heads/main/growth_data.csv", destfile =  "growthdata.csv")
+growth_data <- read.csv("growthdata.csv")
+colnames(growth_data)
+```
+Step 7: Calculate the mean and standard deviation of tree circumference at the start and end of the study at both sites.
+```{r}
+# calculate mean and standard deviation for Northeast site at the start (Circumf_2005_cm)
+meannortheast_start<- mean(growth_data$Circumf_2005_cm[growth_data$Site== "northeast"])
+meannortheast_start
+sdnortheast_start <- sd(growth_data$Circumf_2005_cm[growth_data$Site== "northeast"])
+sdnortheast_start
+#calculate mean and standard deviation for norteast at the end ()
+meannortheast_end <- mean(growth_data$Circumf_2020_cm[growth_data$Site== "northeast"])
+meannortheast_end
+sdnortheast_end <- sd(growth_data$Circumf_2020_cm[growth_data$Site== "northeast"])
+sdnortheast_end
+# calculate mean and standard deviation for southwest at the start 
+meansouthwest_start<- mean(growth_data$Circumf_2005_cm[growth_data$Site== "southwest"])
+meansouthwest_start
+sdsouthwest_start <- sd(growth_data$Circumf_2005_cm[growth_data$Site== "southwest"])
+sdsouthwest_start
+# calculate # calculate mean and standard deviation for southwest at the end 
+meansouthwest_end<- mean(growth_data$Circumf_2020_cm[growth_data$Site== "southwest"])
+meansouthwest_end
+sdsouthwest_end <- sd(growth_data$Circumf_2020_cm[growth_data$Site== "southwest"])
+sdsouthwest_end
+```
+step 8: Make a box plot of tree circumference at the start and end of the study at both sites.
+```
+```{r}
+northeast <- growth_data[growth_data$Site == "northeast", ]
+northeast
+southwest <- growth_data[growth_data$Site == "southwest", ]
+southwest
+boxplot(northeast$Circumf_2005_cm, northeast$Circumf_2020_cm,
+        southwest$Circumf_2005_cm, southwest$Circumf_2020_cm,
+        names = c("NE Start","NE End", "SW Start", "SW End"),
+        col = c("red", "blue", "red", "blue"),
+        ylab = "Tree Circumference (cm)",
+        main = "Tree Circumference at Start and End by Site")
+        
+```
+
 
