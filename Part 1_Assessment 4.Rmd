@@ -107,14 +107,22 @@ boxplot(northeast$Circumf_2005_cm, northeast$Circumf_2020_cm,
 Step 9: Calculate the mean growth over the last 10 years at each site.
 ```{r}
 # calculate growth data from 2010 to 2020
-northeast_growth_data_2010_2020 <- (northeast$Circumf_2020_cm - northeast$Circumf_2010_cm)
-northeast_growth_data_2010_2020
-Southwest_growth_data_2010_2020 <- (southwest$Circumf_2020_cm - southwest$Circumf_2010_cm)
-Southwest_growth_data_2010_2020
-North_east_mean_growth_data <- mean(northeast_growth_data_2010_2020)
+growth_data$ growth_10_years <- (growth_data$Circumf_2020_cm - growth_data$Circumf_2010_cm)
+growth_data$ growth_10_years
+#Calculate mean growth data for last 10 years for each site 
+North_east_growth_data <- (growth_data$growth_10_years[growth_data$Site == "northeast"])
+North_east_growth_data
+North_east_mean_growth_data <- mean(North_east_growth_data)
 North_east_mean_growth_data
-Southwest_mean_growth_data <-mean(Southwest_growth_data_2010_2020)
+South_west_growth_data <- (growth_data$growth_10_years[growth_data$Site == "southwest"])
+South_west_growth_data
+Southwest_mean_growth_data <- mean (South_west_growth_data)
 Southwest_mean_growth_data
 ```
 
-
+Step 10 Use the t.test to estimate the p-value that the 10 year growth is different at the two sites.
+The p-value for the two sites were determined using t-tests. The north_east_growth_data which contains the last 10 years growth data for northeast site and South_west_growth_data which contains last 10 years growt data for southwest site were used to compare the growth between the two sites.The study observed higher mean 10-year growth of 42.94 at the northeast site compared to soutwest site (35.49 cm) but the growth difference was not statistically significant at 5% significance level (t-value = 1.8882, df = 87.978, and p-value = 0.06229). 
+```{r}
+t.test(North_east_growth_data,South_west_growth_data)
+```
+ 
