@@ -1,0 +1,84 @@
+---
+title: "r_project_part 2"
+author: "Ameeta"
+date: "2025-09-24"
+output: html_document
+---
+
+```{r loading package}
+suppressPackageStartupMessages({
+  library("seqinr") # is a package designed to process and analyse sequence data.
+  library("R.utils") # general utilities like zip and unzip
+})
+# loading e.coli and Saprospirales data 
+library("R.utils")
+
+URL="https://ftp.ensemblgenomes.ebi.ac.uk/pub/bacteria/release-62/fasta/bacteria_58_collection/saprospirales_bacterium_gca_003448025/cds/Saprospirales_bacterium_gca_003448025.ASM344802v1.cds.all.fa.gz"
+download.file(URL,destfile="saprospirales_cds.fa.gz")
+URL="http://ftp.ensemblgenomes.org/pub/bacteria/release-53/fasta/bacteria_0_collection/escherichia_coli_str_k_12_substr_mg1655_gca_000005845/cds/Escherichia_coli_str_k_12_substr_mg1655_gca_000005845.ASM584v2.cds.all.fa.gz"
+download.file(URL,destfile="ecoli_cds.fa.gz")
+
+gunzip("ecoli_cds.fa.gz", overwrite  = TRUE)
+gunzip("saprospirales_cds.fa.gz", overwrite  = TRUE)
+
+list.files()
+# Reading the FASTA file 
+library("seqinr")
+e.coli_cds <- seqinr::read.fasta("ecoli_cds.fa")
+saprospirales_cds <- seqinr::read.fasta("saprospirales_cds.fa")
+# count number of sequences 
+e.coli_number <- length(e.coli_cds)
+sapropirales_num <- length(saprospirales_cds)
+# create table 
+cds_table <- data.frame(
+  Bacteria = c("E.coli", "Saprospirales"),
+  CDS_count = c(e.coli_number, sapropirales_num)
+)
+cds_table
+
+
+```
+How much coding DNA is there in total for these two organisms? Present this in the form of a table. Describe any differences between the two organisms.
+```{r}
+e.coli_cds_length<- as.numeric(summary(e.coli_cds)[,1])
+saprospirales_cds_length <- as.numeric(summary(saprospirales_cds)[,1])
+e.coli_total_cds_length <- sum(e.coli_cds_length)
+saprospirales_total_cds_length <- sum(saprospirales_cds_length)
+# create table 
+cds_table <- data.frame(
+  Bacteria = c("E.coli", "Saprospirales"),
+  CDS_count = c(e.coli_number, sapropirales_num),
+  total_coding_DNA = c(e.coli_total_cds_length, saprospirales_total_cds_length)
+)
+cds_table
+```
+Calculate the length of all coding sequences in these two organisms. Make a boxplot of coding sequence length in these organisms. What is the mean and median coding sequence length of these two organisms? Describe any differences between the two organisms.
+```{r}
+# generate box plot for e.coli and saprospirales
+boxplot(list(E.coli = e.coli_cds_length, Saprospirales = saprospirales_cds_length),
+        col = c("red", "blue"),
+        ylab = "CDS Length (bp)",
+        main = "Distribution of Coding Sequence Lengths")
+
+# calculate mean and median of e.coli 
+e.coli_mean_cds_length <- mean(e.coli_cds_length)
+e.coli_median_cds_length <- median(e.coli_cds_length)
+#calculate mean and median of saprospirales
+saprospirales_mean_cds_length <- mean(saprospirales_cds_length)
+saprospirales_median_cds_length <- median(saprospirales_cds_length)
+# create a table 
+cds_table <- data.frame(
+  Bacteria = c("E.coli", "Saprospirales"),
+  CDS_count = c(e.coli_number, sapropirales_num),
+  total_coding_DNA = c(e.coli_total_cds_length, saprospirales_total_cds_length),
+  mean_cds_length = c(e.coli_mean_cds_length, saprospirales_mean_cds_length),
+  median_cds_length = c(e.coli_median_cds_length, saprospirales_median_cds_length)
+)
+cds_table
+
+```
+Calculate the frequency of DNA bases in the total coding sequences for both organisms. Perform the same calculation for the total protein sequence. Create bar plots for nucleotide and amino acid frequency. Describe any differences between the two organisms.
+```{r}
+
+```
+
