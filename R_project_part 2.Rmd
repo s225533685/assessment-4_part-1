@@ -79,6 +79,97 @@ cds_table
 ```
 Calculate the frequency of DNA bases in the total coding sequences for both organisms. Perform the same calculation for the total protein sequence. Create bar plots for nucleotide and amino acid frequency. Describe any differences between the two organisms.
 ```{r}
+# Calculate frequency of dna bases in total coding sequences for e.coli
+e.coli_dna <- unlist(e.coli_cds)
+e.coli_dna_composition <- count(e.coli_dna, 1)   #1 =word size (single nucleotide count)
+e.coli_dna_composition
+# find relative frequency of each nucleotide in e.coli
+e.coli_dna_proportion <- e.coli_dna_composition/sum(e.coli_dna_composition)
+# calculate frequency of dna bases in total coding sequences for saprospirales 
+saprospirales_dna <- unlist(saprospirales_cds)
+saprospirales_dna_composition <- count(saprospirales_dna, 1)   #1 =word size (single nucleotide count)
+saprospirales_dna_composition
+# find relative frequency of each nucleotide in saprospirales
+saprospirales_dna_proportion <- saprospirales_dna_composition/sum(saprospirales_dna_composition)
+# generate barplot for dna bases frequency for e.coli and saprospirales
+dna_matrix <-rbind(E.coli = e.coli_dna_proportion, Saprospirales = saprospirales_dna_proportion)
+barplot(dna_matrix,
+        beside = TRUE,
+        legend.text = TRUE,
+        ylab = "Proportions",
+        xlab = "Nucleotides",
+        main = "E.coli and Saprospirales CDS composition"
+        )
+grid()
 
+# Translate the sequences for e.coli
+e.coli_prot <-lapply(e.coli_cds, translate)
+e.coli_prot
+# unlist e.coli 
+e.coli_aa <- unlist(e.coli_prot)
+# frequency of each amino acid in e.coli
+e.coli_protein_composition <- table(e.coli_aa)
+e.coli_protein_composition
+# relative frequency of each aminoacid in e.coli 
+e.coli_aa_proportion <- e.coli_protein_composition/sum(e.coli_protein_composition)
+e.coli_aa_proportion
+
+# Translate the sequences for saprospirales
+saprospirales_prot <- lapply(saprospirales_cds, translate)
+# unlist aminoacids of saprospirales
+saprospirales_aa <- unlist(saprospirales_prot)
+saprospirales_protein_composition <- table(saprospirales_aa)
+saprospirales_protein_composition
+# relative frequency of each aminoacid in e.coli 
+saprospirales_aa_proportion <- saprospirales_protein_composition/sum(saprospirales_protein_composition)
+saprospirales_aa_proportion
+
+# generate barplot for aminoacid frequency for e.coli and saprospirales
+aa_matrix <-rbind(E.coli = e.coli_aa_proportion, Saprospirales = saprospirales_aa_proportion)
+barplot(aa_matrix,
+        beside = TRUE,
+        legend.text = TRUE,
+        ylab = "Proportions",
+        xlab = "aminoacids",
+        main = "E.coli and Saprospirales protein composition"
+        )
+grid()
+```
+Create a codon usage table and quantify the codon usage bias among all coding sequences. Describe any differences between the two organisms with respect to their codon usage bias. Provide charts to support your observations.
+```{r}
+# Determining codon usage for e.coli
+e.coli_codon_usage <- uco(e.coli_dna)
+e.coli_codon_usage <- e.coli_codon_usage[order(names(e.coli_codon_usage))]  # sort codons
+e.coli_codon_usage
+
+# Determining codon usage for saprospirales
+saprospirales_codon_usage <- uco(saprospirales_dna) # uco() returns counts of each codon.
+saprospirales_codon_usage <- saprospirales_codon_usage[order(names(saprospirales_codon_usage))]  # sort codons
+saprospirales_codon_usage
+
+# Creating table for codon_usage for e.coli and saprospirales
+codons <- names(e.coli_codon_usage)
+bacteria_codon_table <- data.frame(
+  Codon = codons,
+  E.coli_count = as.numeric(e.coli_codon_usage),
+  Saprospirales_count = as.numeric(saprospirales_codon_usage)
+  )
+bacteria_codon_table
+
+e.coli_codon_usage_bias <- uco(e.coli_dna, index="rscu", as.data.frame=TRUE)
+saprospirales_codon_usage_bias <- uco(saprospirales_dna, index="rscu", as.data.frame=TRUE)
+e.coli_codon_usage_bias
+
+
+# generate barchart for codon usage bias for e.coli and saprospirales
+RCSU_matrix <-rbind(E.coli = e.coli_codon_usage_bias$freq, Saprospirales = saprospirales_codon_usage_bias$freq)
+barplot(RCSU_matrix,
+        beside = TRUE,
+        legend.text = TRUE,
+        ylab = "codon usage bias (RSCU)",
+        xlab = "Codons",
+        main = "Codon usage frequency usage comparison"
+        )
+grid()
 ```
 
